@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isValidUserData() {
+      let data = request.resource.data;
+      return data.email is string 
+        && data.email.matches('^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$')
+        && data.createdAt is string
+        && data.lastLogin is string;
+    }
+
+    // User collection rules
+    match /users/{userId} {
+      // Allow read if authenticated and is the owner
+      allow read: if isOwner(userId);
+      
+      // Allow create if authenticated, is the owner, and data is valid
+      allow create: if isOwner(userId) 
+        && isValidUserData()
+        && request.resource.data.keys().hasAll(['email', 'createdAt', 'lastLogin']);
+      
+      // Allow update if authenticated, is the owner, and only updating allowed fields
+      allow update: if isOwner(userId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['lastLogin', 'email'])
+        && isValidUserData();
+      
+      // Allow delete if authenticated and is the owner
+      allow delete: if isOwner(userId);
+
+      // Subcollections rules
+      match /{subcollection}/{docId} {
+        // Allow read/write if user owns the parent document
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Default deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+} 

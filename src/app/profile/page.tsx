@@ -3,15 +3,61 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { FaArrowLeft, FaBell, FaHome, FaUsers, FaPlus, FaComments, FaUser, FaChevronRight } from 'react-icons/fa';
 import { MdNotifications, MdAnalytics, MdGroup, MdLogout } from 'react-icons/md';
+import { getAuth, signOut } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { app } from '../lib/firebase';
+import BottomNav from '../components/BottomNav';
 
 export default function ProfilePage() {
   const router = useRouter();
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  const handleLogout = () => {
-    router.push('/login');
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+          router.push('/login');
+          return;
+        }
+
+        // Get user data from Firestore
+        const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+        if (userDoc.exists()) {
+          setUserData(userDoc.data());
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [auth, db, router]);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white min-h-screen pb-20">
@@ -31,14 +77,14 @@ export default function ProfilePage() {
           <div className="w-16 h-16 relative rounded-full overflow-hidden">
             <Image
               src="/images/tech (2).jpg"
-              alt="David Chikanga"
+              alt={userData?.name || 'User'}
               fill
               className="object-cover"
             />
           </div>
           <div>
-            <h1 className="text-xl font-semibold text-black">David Chikanga</h1>
-            <p className="text-gray-600">UI/UX Designer</p>
+            <h1 className="text-xl font-semibold text-black">{userData?.name || 'User'}</h1>
+            <p className="text-gray-600">{userData?.email || 'No email provided'}</p>
           </div>
         </div>
 
@@ -58,7 +104,7 @@ export default function ProfilePage() {
                 <path fill="currentColor" d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4ZM20 6V6.31L12 11.875L4 6.31V6H20ZM4 18V8.69L11.5625 14L12 14.295L12.4375 14L20 8.69V18H4Z"/>
               </svg>
             </div>
-            <span className="text-gray-600">example@gmail.com</span>
+            <span className="text-gray-600">{userData?.email || 'No email provided'}</span>
           </div>
         </div>
 
@@ -122,26 +168,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-2">
-        <div className="flex justify-around items-center px-6">
-          <Link href="/homescreen" className="flex flex-col items-center">
-            <FaHome className="w-6 h-6 text-gray-400" />
-          </Link>
-          <Link href="/community" className="flex flex-col items-center">
-            <FaUsers className="w-6 h-6 text-gray-400" />
-          </Link>
-          <Link href="/create" className="flex flex-col items-center">
-            <FaPlus className="w-6 h-6 text-gray-400" />
-          </Link>
-          <Link href="/messages" className="flex flex-col items-center">
-            <FaComments className="w-6 h-6 text-gray-400" />
-          </Link>
-          <Link href="/profile" className="flex flex-col items-center">
-            <FaUser className="w-6 h-6 text-blue-600" />
-            <span className="text-xs text-blue-600">Profile</span>
-          </Link>
-        </div>
-      </div>
+      <BottomNav />
     </div>
   );
 } 

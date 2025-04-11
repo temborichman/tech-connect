@@ -4,17 +4,18 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaFacebook, FaGoogle, FaApple, FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import { HiLightBulb, HiOutlineLightBulb } from "react-icons/hi";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { app } from "../lib/firebase";
 
 export default function SignUpPage() {
-  const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState("light");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,70 +24,67 @@ export default function SignUpPage() {
   const auth = getAuth(app);
   const db = getFirestore(app);
 
-  // Only run on client-side
   useEffect(() => {
-    setMounted(true);
-    // Get initial theme from localStorage or system preference
-    const savedTheme = localStorage.getItem("theme");
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle("dark", initialTheme === "dark");
-  }, []);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   const handleThemeToggle = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  // Handle Sign Up with animation
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      setError("Please enter your name");
+      return false;
+    }
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setError("Please enter a valid email address");
+      return false;
+    }
+    if (!formData.password || formData.password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return false;
+    }
+    return true;
+  };
+
   const handleSignUp = async () => {
     try {
-      // Reset error
       setError("");
       setLoading(true);
 
-      // Validate inputs
-      if (!name.trim()) {
-        setError("Please enter your name");
-        setLoading(false);
-        return;
-      }
-
-      if (!email.trim()) {
-        setError("Please enter your email");
-        setLoading(false);
-        return;
-      }
-
-      if (!email.includes('@')) {
-        setError("Please enter a valid email address");
-        setLoading(false);
-        return;
-      }
-
-      if (!password) {
-        setError("Please enter a password");
-        setLoading(false);
-        return;
-      }
-
-      if (password.length < 6) {
-        setError("Password must be at least 6 characters long");
+      if (!validateForm()) {
         setLoading(false);
         return;
       }
 
       // Create user with Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
       const user = userCredential.user;
 
       // Save user details to Firestore
       await setDoc(doc(db, "users", user.uid), {
-        name: name,
-        email: email,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password, // Note: In production, never store passwords in Firestore
         createdAt: new Date().toISOString(),
         lastLogin: new Date().toISOString(),
         role: "user",
@@ -108,7 +106,6 @@ export default function SignUpPage() {
       }, 2000);
 
     } catch (error: any) {
-      // Handle specific Firebase auth errors
       if (error.code === 'auth/email-already-in-use') {
         setError("Email is already registered. Please login instead.");
       } else if (error.code === 'auth/invalid-email') {
@@ -125,23 +122,17 @@ export default function SignUpPage() {
     }
   };
 
-  const handleLogin = () => {
-    router.push("/login");
-  };
-
   return (
     <div
       id="signup-container"
       className={`min-h-screen flex flex-col justify-center items-center bg-white text-gray-900 dark:text-black transition-all duration-500 opacity-100`}
     >
-      {/* Theme Toggle - Only render when mounted */}
-      {mounted && (
-        <div className="absolute top-5 left-0 self-start p-2">
-          <button onClick={handleThemeToggle} className="w-10 h-6 bg-gray-200 rounded-full flex items-center p-1">
-            <div className={`w-4 h-4 bg-black rounded-full transition-transform duration-300 ${theme === "dark" ? "translate-x-4" : ""}`}></div>
-          </button>
-        </div>
-      )}
+      {/* Theme Toggle */}
+      <div className="absolute top-5 left-0 self-start p-2">
+        <button onClick={handleThemeToggle} className="w-10 h-6 bg-gray-200 rounded-full flex items-center p-1">
+          <div className={`w-4 h-4 bg-black rounded-full transition-transform duration-300 ${theme === "dark" ? "translate-x-4" : ""}`}></div>
+        </button>
+      </div>
 
       {/* Heading */}
       <h1 className="text-4xl font-bold text-center mb-8">Create Account</h1>
@@ -158,23 +149,24 @@ export default function SignUpPage() {
         </div>
       )}
 
+      {/* Error Message */}
+      {error && (
+        <div className="w-full max-w-md mb-4 px-6">
+          <p className="text-red-500 text-sm text-center">{error}</p>
+        </div>
+      )}
+
       {/* Form Inputs */}
       <div className="w-full max-w-md space-y-4 px-6">
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-500 text-sm rounded-lg p-3 text-center">
-            {error}
-          </div>
-        )}
-
         {/* Name Input */}
         <div className="flex items-center border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2">
           <FaUser className="text-gray-500 dark:text-gray-400 mr-3" />
           <input
             type="text"
-            placeholder="Enter full name..."
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            placeholder="Enter your name..."
+            value={formData.name}
+            onChange={handleInputChange}
             className="flex-1 text-lg bg-transparent placeholder-gray-500 dark:placeholder-gray-400 outline-none"
           />
         </div>
@@ -184,9 +176,10 @@ export default function SignUpPage() {
           <FaEnvelope className="text-gray-500 dark:text-gray-400 mr-3" />
           <input
             type="email"
+            name="email"
             placeholder="Enter email..."
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleInputChange}
             className="flex-1 text-lg bg-transparent placeholder-gray-500 dark:placeholder-gray-400 outline-none"
           />
         </div>
@@ -196,18 +189,31 @@ export default function SignUpPage() {
           <FaLock className="text-gray-500 dark:text-gray-400 mr-3" />
           <input
             type={showPassword ? "text" : "password"}
+            name="password"
             placeholder="Enter Password..."
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleInputChange}
             className="flex-1 text-lg bg-transparent placeholder-gray-500 dark:placeholder-gray-400 outline-none"
           />
-          <button 
-            type="button" 
+          <button
             onClick={() => setShowPassword(!showPassword)}
-            className="text-gray-500 dark:text-gray-400 focus:outline-none"
+            className="text-gray-500 dark:text-gray-400 ml-2"
           >
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
+        </div>
+
+        {/* Confirm Password Input */}
+        <div className="flex items-center border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2">
+          <FaLock className="text-gray-500 dark:text-gray-400 mr-3" />
+          <input
+            type={showPassword ? "text" : "password"}
+            name="confirmPassword"
+            placeholder="Confirm Password..."
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            className="flex-1 text-lg bg-transparent placeholder-gray-500 dark:placeholder-gray-400 outline-none"
+          />
         </div>
       </div>
 
@@ -215,18 +221,15 @@ export default function SignUpPage() {
       <button
         onClick={handleSignUp}
         disabled={loading}
-        className={`px-35 py-3 mt-6 bg-[#0077B5] text-white rounded-lg font-semibold ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+        className={`px-37 py-3 mt-6 bg-[#0077B5] text-white rounded-lg font-semibold hover:bg-[#006394] transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {loading ? (
-          <span className="flex items-center">
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
+          <div className="flex items-center">
+            <div className="w-5 h-5 border-t-2 border-white rounded-full animate-spin mr-2"></div>
             Creating Account...
-          </span>
+          </div>
         ) : (
-          "Sign Up"
+          'Sign Up'
         )}
       </button>
 
@@ -237,13 +240,13 @@ export default function SignUpPage() {
 
       {/* Social Sign-Up Buttons */}
       <div className="flex space-x-4 mt-4">
-        <button className="p-2 rounded-full bg-blue-600 text-white">
+        <button className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors">
           <FaFacebook />
         </button>
-        <button className="p-2 rounded-full bg-red-600 text-white">
+        <button className="p-2 rounded-full bg-red-600 text-white hover:bg-red-700 transition-colors">
           <FaGoogle />
         </button>
-        <button className="p-2 rounded-full bg-black text-white">
+        <button className="p-2 rounded-full bg-black text-white hover:bg-gray-800 transition-colors">
           <FaApple />
         </button>
       </div>
@@ -252,11 +255,11 @@ export default function SignUpPage() {
       <div className="mt-6 text-center text-gray-600 dark:text-black">
         <span>
           Already have an account?{" "}
-          <button onClick={handleLogin} className="text-[#006442] hover:underline">
+          <button onClick={() => router.push("/login")} className="text-[#006442] hover:underline">
             Login
           </button>
         </span>
       </div>
     </div>
   );
-}
+} 

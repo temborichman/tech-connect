@@ -10,7 +10,7 @@ export default function SplashScreen() {
     // Auto-navigate to "Get Started" screen after 3 seconds
     const timer = setTimeout(() => {
       router.push("/get-started");
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(timer); // Cleanup timeout
   }, [router]);
