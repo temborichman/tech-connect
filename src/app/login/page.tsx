@@ -72,23 +72,27 @@ export default function LoginPage() {
         router.push("/interests");
       }, 1000);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       setLoading(false);
-      switch (error.code) {
-        case "auth/user-not-found":
-          setError("No account found with this email");
-          break;
-        case "auth/wrong-password":
-          setError("Incorrect password");
-          break;
-        case "auth/invalid-credential":
-          setError("Invalid email or password");
-          break;
-        case "auth/too-many-requests":
-          setError("Too many failed attempts. Please try again later");
-          break;
-        default:
-          setError("An error occurred. Please try again");
+      if (error instanceof Error) {
+        switch (error.message) {
+          case "auth/user-not-found":
+            setError("No account found with this email");
+            break;
+          case "auth/wrong-password":
+            setError("Incorrect password");
+            break;
+          case "auth/invalid-credential":
+            setError("Invalid email or password");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many failed attempts. Please try again later");
+            break;
+          default:
+            setError("An error occurred. Please try again");
+        }
+      } else {
+        setError("An unexpected error occurred");
       }
     }
   };

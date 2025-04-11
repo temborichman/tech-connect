@@ -1,11 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { FaCalendarAlt, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaMapMarkerAlt, FaClock, FaBell, FaArrowLeft, FaSearch, FaHome, FaUserPlus, FaPlus, FaEnvelope, FaUser } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from 'next/image';
-import { FaBell, FaArrowLeft, FaSearch, FaHome, FaUserPlus, FaPlus, FaEnvelope, FaUser } from 'react-icons/fa';
 import BottomNav from '../../components/BottomNav';
 
 export default function EventsPage() {
@@ -13,14 +12,6 @@ export default function EventsPage() {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [activeCategory, setActiveCategory] = useState('All');
   
-  const navItems = [
-    { icon: FaHome, label: 'Home', path: '/' },
-    { icon: FaUserPlus, label: 'Community', path: '/community' },
-    { icon: FaPlus, label: 'Create', path: '/create' },
-    { icon: FaEnvelope, label: 'Messages', path: '/messages' },
-    { icon: FaUser, label: 'Profile', path: '/profile' },
-  ];
-
   const categories = [
     { name: 'All' },
     { name: 'UI/UX Design' },

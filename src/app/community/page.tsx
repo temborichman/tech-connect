@@ -1,22 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { FaSearch, FaUserPlus, FaPlus } from "react-icons/fa";
+import { FaUserPlus, FaPlus, FaHome, FaEnvelope, FaUser, FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import BottomNav from "../components/BottomNav";
+import Image from "next/image";
 
 export default function CommunityPage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("all");
-
-  const navItems = [
-    { icon: FaHome, label: 'Home', path: '/' },
-    { icon: FaUserPlus, label: 'Community', path: '/community' },
-    { icon: FaPlus, label: 'Create', path: '/create' },
-    { icon: FaEnvelope, label: 'Messages', path: '/messages' },
-    { icon: FaUser, label: 'Profile', path: '/profile' },
-  ];
 
   const communityFeatures = [
     {

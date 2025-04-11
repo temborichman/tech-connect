@@ -3,8 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FaBell, FaHeart, FaComment, FaPaperPlane, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes, FaSearch, FaPlus } from 'react-icons/fa';
+import { FaBell, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes } from 'react-icons/fa';
 import Post from '../components/Post';
 import BottomNav from '../components/BottomNav';
 
@@ -93,13 +92,13 @@ const generatePosts = (start: number, end: number) => {
 };
 
 export default function Home() {
-  const path = usePathname();
   const [showMentorCard, setShowMentorCard] = useState(true);
   const [posts, setPosts] = useState(generatePosts(0, 5));
   const [loading, setLoading] = useState(false);
-  const observerTarget = useRef(null);
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentObserverTarget = observerTarget.current;
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && !loading) {
@@ -109,13 +108,13 @@ export default function Home() {
       { threshold: 1.0 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
+    if (currentObserverTarget) {
+      observer.observe(currentObserverTarget);
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+      if (currentObserverTarget) {
+        observer.unobserve(currentObserverTarget);
       }
     };
   }, [loading, posts]);
