@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { FaBell, FaHome, FaUserPlus, FaPlus, FaEnvelope, FaUser } from 'react-icons/fa';
-import BottomNav from '../components/BottomNav';
+import { useState } from "react";
+import { FaSearch, FaUserPlus, FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import BottomNav from "../components/BottomNav";
 
-
-const CommunityPage = () => {
-  const path = usePathname();
+export default function CommunityPage() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("all");
 
   const navItems = [
     { icon: FaHome, label: 'Home', path: '/' },
@@ -99,6 +99,4 @@ const CommunityPage = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default CommunityPage;
+}

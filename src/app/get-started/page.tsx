@@ -17,10 +17,10 @@ const slides = [
   },
 ];
 
-export default function GetStartedScreen() {
+export default function GetStartedPage() {
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false); // Animation state
-  const router = useRouter();
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);

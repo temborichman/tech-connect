@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaBell, FaHeart, FaComment, FaPaperPlane, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes } from 'react-icons/fa';
+import { FaBell, FaHeart, FaComment, FaPaperPlane, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes, FaSearch, FaPlus } from 'react-icons/fa';
 import Post from '../components/Post';
 import BottomNav from '../components/BottomNav';
 

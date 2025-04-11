@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
+import { useState } from "react";
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Image from 'next/image';
-import Link from 'next/link';
-import { FaBell, FaArrowLeft, FaSearch, FaHome, FaUserPlus, FaPlus, FaEnvelope, FaUser, FaMapMarkerAlt, FaClock, FaChevronRight } from 'react-icons/fa';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { FaBell, FaArrowLeft, FaSearch, FaHome, FaUserPlus, FaPlus, FaEnvelope, FaUser } from 'react-icons/fa';
 import BottomNav from '../../components/BottomNav';
 
-const EventsPage = () => {
-  const path = usePathname();
+export default function EventsPage() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("upcoming");
   const [activeCategory, setActiveCategory] = useState('All');
   
   const navItems = [
@@ -172,6 +174,4 @@ const EventsPage = () => {
       <BottomNav />
     </div>
   );
-};
-
-export default EventsPage; 
+} 
