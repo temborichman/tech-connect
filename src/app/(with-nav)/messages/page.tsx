@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { FaArrowLeft, FaBell, FaSearch } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import BottomNav from '../components/BottomNav';
 
 interface Chat {
   id: number;
@@ -108,88 +107,56 @@ export default function MessagesScreen() {
               </div>
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-black/50 rounded-b-lg py-1 px-2">
-              <p className="text-white text-xs text-center">+7 More</p>
+              <p className="text-white text-xs text-center">More</p>
             </div>
           </div>
         </div>
 
         {/* Search Bar */}
         <div className="relative mb-6">
-          <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Search for chat..."
-            className="w-full pl-12 pr-4 py-3 bg-gray-100 rounded-full text-black placeholder-gray-500 focus:outline-none"
+            placeholder="Search messages..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-gray-100 rounded-full py-2 px-4 pl-10 text-black placeholder-gray-500 focus:outline-none"
           />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-3 mb-4">
-          <button
-            onClick={() => setActiveTab('all')}
-            className={`px-4 py-2 rounded-full ${
-              activeTab === 'all'
-                ? 'bg-[#0077C7] text-white'
-                : 'border border-gray-300 text-black'
-            }`}
-          >
-            All Chats
-          </button>
-          <button
-            onClick={() => setActiveTab('unread')}
-            className={`px-4 py-2 rounded-full ${
-              activeTab === 'unread'
-                ? 'bg-[#0077C7] text-white'
-                : 'border border-gray-300 text-black'
-            }`}
-          >
-            Unread
-          </button>
-          <button
-            onClick={() => setActiveTab('groups')}
-            className={`px-4 py-2 rounded-full ${
-              activeTab === 'groups'
-                ? 'bg-[#0077C7] text-white'
-                : 'border border-gray-300 text-black'
-            }`}
-          >
-            Groups
-          </button>
+        {/* Chats */}
+        <div className="space-y-4">
+          {chats.map((chat) => (
+            <div
+              key={chat.id}
+              onClick={() => handleChatClick(chat.name)}
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
+            >
+              <div className="relative">
+                <Image
+                  src={chat.image}
+                  alt={chat.name}
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                />
+                {chat.isTyping && (
+                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                )}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-medium text-black">{chat.name}</h3>
+                  <span className="text-xs text-gray-500">2m ago</span>
+                </div>
+                <p className="text-sm text-gray-500">
+                  {chat.isTyping ? 'Typing...' : 'Last message here'}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Chat List */}
-      <div className="flex-1 px-4 pb-[72px]">
-        {chats.map((chat) => (
-          <div
-            key={chat.id}
-            onClick={() => handleChatClick(chat.name)}
-            className="flex items-center gap-3 py-3 border-b cursor-pointer hover:bg-gray-50 transition-colors"
-          >
-            <div className="relative">
-              <Image
-                src={chat.image}
-                alt={chat.name}
-                width={48}
-                height={48}
-                className="rounded-full object-cover"
-              />
-              <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-black">{chat.name}</h3>
-              <p className="text-gray-500 text-sm">
-                {chat.isTyping ? `${chat.name.split(' ')[0]} is typing...` : 'Online'}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom Navigation */}
-      <BottomNav />
     </div>
   );
 } 

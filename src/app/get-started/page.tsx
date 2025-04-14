@@ -50,9 +50,53 @@ export default function GetStartedPage() {
       </div>
 
       {/* Content Section (Bottom Half) */}
-      <div className="flex-1 flex flex-col justify-center items-center bg-white px-6 text-center">
-        <h1 className="text-3xl font-bold text-gray-900">{slides[currentSlide].title}</h1>
-        <p className="text-gray-600 mt-4 max-w-lg">{slides[currentSlide].text}</p>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        {/* Logo */}
+        <div className="mb-8">
+          <Image
+            src="/logo.png"
+            alt="Tech Connect Logo"
+            width={120}
+            height={120}
+            className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"
+          />
+        </div>
+
+        {/* Title */}
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-4">
+          Welcome to Tech Connect
+        </h1>
+
+        {/* Description */}
+        <p className="text-gray-600 dark:text-gray-300 text-center mb-8 max-w-md md:max-w-lg lg:max-w-xl">
+          Connect with tech enthusiasts, share knowledge, and grow together in the world of technology.
+        </p>
+
+        {/* Carousel */}
+        <div className="w-full max-w-md md:max-w-lg lg:max-w-xl mb-8">
+          <div className="relative h-64 md:h-72 lg:h-80">
+            {slides.map((slide, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  index === currentSlide ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 mb-4">
+                    {slide.icon}
+                  </div>
+                  <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold mb-2">
+                    {slide.title}
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300 text-center">
+                    {slide.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Pagination Dots */}
         <div className="flex mt-6 space-x-2">
@@ -68,12 +112,14 @@ export default function GetStartedPage() {
         </div>
 
         {/* Get Started Button */}
-        <button
-          className="mt-6 px-30 py-3 bg-[#0077B5] text-white rounded-lg font-semibold"
-          onClick={handleGetStarted}
-        >
-          Get Started
-        </button>
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => router.push("/signin")}
+            className="w-[280px] md:w-[320px] lg:w-[360px] py-2.5 px-4 bg-[#1A73E8] text-white rounded-lg font-medium hover:bg-[#1557B0] transition-colors text-sm md:text-base"
+          >
+            Get Started
+          </button>
+        </div>
       </div>
     </div>
   );

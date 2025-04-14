@@ -1,22 +1,14 @@
-import Image from "next/image";
-import Splash from "./splash/page";
-import GetStartedScreen from "./get-started/page"; 
-import SignScreen from "./sign/page";
-import SignUpPage from "./signin/page";
-import InterestsScreen from "./interests/page";
-import HomeScreen from "./homescreen/page";
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
+import HomeScreen from './(with-nav)/homescreen/page';
 
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
-export default function Home() {
-  return (
-    <div>
-      <Splash />
-      <GetStartedScreen />
-      <SignScreen />
-      <SignUpPage />
-      <InterestsScreen />
-      <HomeScreen />
+  if (!session) {
+    redirect('/login');
+  }
 
-    </div>
-  );
+  return <HomeScreen />;
 }

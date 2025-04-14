@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaArrowLeft, FaEllipsisH, FaMicrophone, FaImages, FaPaperPlane } from 'react-icons/fa';
+import { FaArrowLeft, FaEllipsisH, FaMicrophone, FaPaperPlane } from 'react-icons/fa';
 
 interface Message {
   id: number;
@@ -11,13 +11,13 @@ interface Message {
   isUser: boolean;
 }
 
-export default function CreateScreen() {
+export default function TechProjectTeamChat() {
   const [messages, setMessages] = useState<Message[]>([
-    { id: 1, text: "Hey", isUser: true },
-    { id: 2, text: "Hey David. How may I help you?", isUser: false },
-    { id: 3, text: "Who designed this application?", isUser: true },
-    { id: 4, text: "Tech Connect is an application that was designed by the UX/UI enthusiast Daniel Mudimba.", isUser: false },
-    { id: 5, text: "What inspired him?", isUser: true },
+    { id: 1, text: "Hey team! How's the project going?", isUser: true },
+    { id: 2, text: "Great! We've just completed the UI redesign.", isUser: false },
+    { id: 3, text: "That's awesome! When can we expect the next update?", isUser: true },
+    { id: 4, text: "We're planning to deploy the new features by Friday.", isUser: false },
+    { id: 5, text: "Perfect! Keep me posted on the progress.", isUser: true },
   ]);
   const [inputMessage, setInputMessage] = useState('');
 
@@ -30,24 +30,24 @@ export default function CreateScreen() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="flex flex-col h-[calc(100vh-4rem)] bg-white">
       {/* Header */}
       <div className="relative pt-20 pb-3 px-4 border-b">
-        <Link href="/homescreen" className="absolute top-8 left-4">
+        <Link href="/messages" className="absolute top-8 left-4">
           <FaArrowLeft className="w-5 h-5 text-black" />
         </Link>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 ml-8">
             <div className="bg-[#0077C7] rounded-full p-1">
               <Image
-                src="/images/create.png"
-                alt="Tech Connect AI"
+                src="/images/tech (1).jpg"
+                alt="Tech Project Team"
                 width={28}
                 height={28}
-                className="rounded-full brightness-0 invert"
+                className="rounded-full"
               />
             </div>
-            <h1 className="text-[17px] font-semibold text-black">Tech Connect A.I</h1>
+            <h1 className="text-[17px] font-semibold text-black">Tech Project Team</h1>
           </div>
           <button className="p-1">
             <FaEllipsisH className="w-5 h-5 text-black" />
@@ -83,11 +83,11 @@ export default function CreateScreen() {
             {!message.isUser && (
               <div className="bg-[#0077C7] rounded-full p-1">
                 <Image
-                  src="/images/create.png"
-                  alt="AI"
+                  src="/images/tech (1).jpg"
+                  alt="Team"
                   width={32}
                   height={32}
-                  className="rounded-full brightness-0 invert"
+                  className="rounded-full"
                 />
               </div>
             )}
@@ -103,21 +103,28 @@ export default function CreateScreen() {
           </div>
           <div className="bg-[#0077C7] rounded-full p-1">
             <Image
-              src="/images/create.png"
-              alt="AI"
+              src="/images/tech (1).jpg"
+              alt="Team"
               width={32}
               height={32}
-              className="rounded-full brightness-0 invert"
+              className="rounded-full"
             />
           </div>
         </div>
       </div>
 
       {/* Input Area */}
-      <div className="border-t px-4 py-3">
+      <div className="border-t px-4 py-3 pb-16">
         <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-          <button type="button" className="p-2">
-            <FaMicrophone className="w-5 h-5 text-black" />
+          <button 
+            type={inputMessage.trim() ? "submit" : "button"} 
+            className="p-2"
+          >
+            {inputMessage.trim() ? (
+              <FaPaperPlane className="w-5 h-5 text-[#0077C7]" />
+            ) : (
+              <FaMicrophone className="w-5 h-5 text-black" />
+            )}
           </button>
           <input
             type="text"
@@ -126,12 +133,6 @@ export default function CreateScreen() {
             placeholder="Type a message..."
             className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-black placeholder-gray-500 focus:outline-none"
           />
-          <button type="button" className="p-2">
-            <FaImages className="w-5 h-5 text-black" />
-          </button>
-          <button type="submit" className="p-2">
-            <FaPaperPlane className="w-5 h-5 text-[#0077C7]" />
-          </button>
         </form>
       </div>
     </div>

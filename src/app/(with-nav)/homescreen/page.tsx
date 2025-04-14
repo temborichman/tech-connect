@@ -1,11 +1,12 @@
-"use client";
+'use client';
 
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaBell, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes } from 'react-icons/fa';
-import Post from '../components/Post';
-import BottomNav from '../components/BottomNav';
+import { usePathname } from 'next/navigation';
+import { FaBell, FaHeart, FaComment, FaPaperPlane, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes } from 'react-icons/fa';
+import Post from '@/app/components/Post';
+import BottomNav from '@/app/components/BottomNav';
 
 const navItems = [
   { icon: FaHome, label: 'Home', path: '/' },
@@ -19,86 +20,80 @@ const navItems = [
 const generatePosts = (start: number, end: number) => {
   const posts = [
     {
-      id: 1,
-      profileImage: '/images/mn.png',
-      username: 'Henry Dave',
-      role: 'Web Developer',
-      timeAgo: '30 min ago',
-      content: 'Had an exciting day presenting my new VR program at the Bulawayo International Fair.',
-      postImage: '/images/px.png',
-      likes: 892,
-      comments: 45,
-      shares: 12,
-      viewers: ['/images/mn.png', '/images/r2.png', '/images/r3.png']
+      id: '1',
+      author: {
+        name: 'John Doe',
+        avatar: '/images/mn.png'
+      },
+      content: 'Excited to share my latest project! #coding #webdev',
+      image: '/images/tech (1).jpg',
+      likes: 42,
+      comments: 8,
+      timestamp: '2 hours ago'
     },
     {
-      id: 2,
-      profileImage: '/images/r2.png',
-      username: 'David Kumar',
-      role: 'Full Stack Developer',
-      timeAgo: '1 hour ago',
-      content: 'Successfully deployed our new microservices architecture. Big milestone for the team! 🚀 #DevOps #Cloud',
-      postImage: '/images/tech (4).jpg',
-      likes: 1203,
-      comments: 67,
-      shares: 23,
-      viewers: ['/images/r2.png', '/images/r3.png', '/images/mn.png']
+      id: '2',
+      author: {
+        name: 'Jane Smith',
+        avatar: '/images/r2.png'
+      },
+      content: 'Just completed a new feature for our app! 🚀',
+      likes: 28,
+      comments: 5,
+      timestamp: '4 hours ago'
     },
     {
-      id: 3,
-      profileImage: '/images/r3.png',
-      username: 'Maria Rodriguez',
-      role: 'AI Researcher',
-      timeAgo: '2 hours ago',
+      id: '3',
+      author: {
+        name: 'Maria Rodriguez',
+        avatar: '/images/r3.png'
+      },
       content: 'Presenting our latest research on neural networks at the AI Summit tomorrow. So excited to share our findings! 🤖 #AI #MachineLearning',
-      postImage: '/images/tech (5).jpg',
+      image: '/images/tech (2).jpg',
       likes: 1567,
       comments: 89,
-      shares: 34,
-      viewers: ['/images/r3.png', '/images/mn.png', '/images/r2.png']
+      timestamp: '2 hours ago'
     },
     {
-      id: 4,
-      profileImage: '/images/mn.png',
-      username: 'Alex Thompson',
-      role: 'Product Manager',
-      timeAgo: '3 hours ago',
+      id: '4',
+      author: {
+        name: 'Alex Thompson',
+        avatar: '/images/mn.png'
+      },
       content: 'Just wrapped up our Q4 product roadmap presentation. Amazing ideas from the team! 📊 #ProductManagement',
-      postImage: '/images/tech (3).jpg',
+      image: '/images/tech (3).jpg',
       likes: 734,
       comments: 41,
-      shares: 8,
-      viewers: ['/images/mn.png', '/images/r3.png', '/images/r2.png']
+      timestamp: '3 hours ago'
     },
     {
-      id: 5,
-      profileImage: '/images/r2.png',
-      username: 'Lisa Wang',
-      role: 'Cybersecurity Expert',
-      timeAgo: '4 hours ago',
+      id: '5',
+      author: {
+        name: 'Lisa Wang',
+        avatar: '/images/r2.png'
+      },
       content: 'Conducted a successful penetration testing workshop today. Always great to see people passionate about security! 🔒 #CyberSecurity',
-      postImage: '/images/px.png',
+      image: '/images/tech (4).jpg',
       likes: 945,
       comments: 52,
-      shares: 15,
-      viewers: ['/images/r2.png', '/images/mn.png', '/images/r3.png']
+      timestamp: '4 hours ago'
     }
   ];
 
   return Array.from({ length: end - start }, (_, i) => ({
     ...posts[(start + i) % posts.length],
-    id: start + i
+    id: String(start + i + 1)
   }));
 };
 
 export default function Home() {
+  const path = usePathname();
   const [showMentorCard, setShowMentorCard] = useState(true);
   const [posts, setPosts] = useState(generatePosts(0, 5));
   const [loading, setLoading] = useState(false);
-  const observerTarget = useRef<HTMLDivElement>(null);
+  const observerTarget = useRef(null);
 
   useEffect(() => {
-    const currentObserverTarget = observerTarget.current;
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && !loading) {
@@ -108,13 +103,13 @@ export default function Home() {
       { threshold: 1.0 }
     );
 
-    if (currentObserverTarget) {
-      observer.observe(currentObserverTarget);
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
     }
 
     return () => {
-      if (currentObserverTarget) {
-        observer.unobserve(currentObserverTarget);
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
       }
     };
   }, [loading, posts]);

@@ -8,8 +8,7 @@ import { FaArrowLeft, FaBell, FaHome, FaUsers, FaPlus, FaComments, FaUser, FaChe
 import { MdNotifications, MdAnalytics, MdGroup, MdLogout } from 'react-icons/md';
 import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
-import { app } from '../lib/firebase';
-import BottomNav from '../components/BottomNav';
+import { app } from '@/app/lib/firebase';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -101,74 +100,72 @@ export default function ProfilePage() {
           <div className="flex items-center gap-3">
             <div className="w-6 h-6 flex items-center">
               <svg viewBox="0 0 24 24" className="w-5 h-5 text-gray-600">
-                <path fill="currentColor" d="M20 4H4C2.89543 4 2 4.89543 2 6V18C2 19.1046 2.89543 20 4 20H20C21.1046 20 22 19.1046 22 18V6C22 4.89543 21.1046 4 20 4ZM20 6V6.31L12 11.875L4 6.31V6H20ZM4 18V8.69L11.5625 14L12 14.295L12.4375 14L20 8.69V18H4Z"/>
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z"/>
+                <path fill="currentColor" d="M12 6C9.79 6 8 7.79 8 10C8 12.21 9.79 14 12 14C14.21 14 16 12.21 16 10C16 7.79 14.21 6 12 6ZM12 12C10.9 12 10 11.1 10 10C10 8.9 10.9 8 12 8C13.1 8 14 8.9 14 10C14 11.1 13.1 12 12 12Z"/>
               </svg>
             </div>
-            <span className="text-gray-600">{userData?.email || 'No email provided'}</span>
+            <span className="text-gray-600">Bulawayo, Zimbabwe</span>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="flex gap-4 mb-8">
-          <div className="flex-1 bg-blue-600 rounded-2xl p-4 text-center">
-            <p className="text-white text-2xl font-semibold mb-1">121</p>
-            <p className="text-white text-sm">Connections</p>
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-gray-100 rounded-lg p-4 text-center">
+            <p className="text-2xl font-bold text-blue-600">150</p>
+            <p className="text-sm text-gray-600">Connections</p>
           </div>
-          <div className="flex-1 bg-blue-600 rounded-2xl p-4 text-center">
-            <p className="text-white text-2xl font-semibold mb-1">5</p>
-            <p className="text-white text-sm">Group Projects</p>
+          <div className="bg-gray-100 rounded-lg p-4 text-center">
+            <p className="text-2xl font-bold text-blue-600">45</p>
+            <p className="text-sm text-gray-600">Posts</p>
+          </div>
+          <div className="bg-gray-100 rounded-lg p-4 text-center">
+            <p className="text-2xl font-bold text-blue-600">12</p>
+            <p className="text-sm text-gray-600">Projects</p>
           </div>
         </div>
 
         {/* Menu Items */}
         <div className="space-y-4">
-          <Link href="/notifications" className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-            <div className="flex items-center gap-4">
-              <MdNotifications className="w-6 h-6 text-gray-600" />
-              <span className="text-black">Your Notifications</span>
+          <Link href="/profile/edit" className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+            <div className="flex items-center gap-3">
+              <FaUser className="w-5 h-5 text-blue-600" />
+              <span className="text-gray-800">Edit Profile</span>
             </div>
             <FaChevronRight className="w-4 h-4 text-gray-400" />
           </Link>
-
-          <Link href="/analytics" className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-            <div className="flex items-center gap-4">
-              <MdAnalytics className="w-6 h-6 text-gray-600" />
-              <span className="text-black">Analytics</span>
+          <Link href="/profile/notifications" className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+            <div className="flex items-center gap-3">
+              <MdNotifications className="w-5 h-5 text-blue-600" />
+              <span className="text-gray-800">Notifications</span>
             </div>
             <FaChevronRight className="w-4 h-4 text-gray-400" />
           </Link>
-
-          <Link href="/collaborations" className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-            <div className="flex items-center gap-4">
-              <MdGroup className="w-6 h-6 text-gray-600" />
-              <span className="text-black">Project Colloborations</span>
+          <Link href="/profile/analytics" className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+            <div className="flex items-center gap-3">
+              <MdAnalytics className="w-5 h-5 text-blue-600" />
+              <span className="text-gray-800">Analytics</span>
             </div>
             <FaChevronRight className="w-4 h-4 text-gray-400" />
           </Link>
-
-          <Link href="/connections" className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
-            <div className="flex items-center gap-4">
-              <FaUsers className="w-6 h-6 text-gray-600" />
-              <span className="text-black">Your connections</span>
+          <Link href="/profile/groups" className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
+            <div className="flex items-center gap-3">
+              <MdGroup className="w-5 h-5 text-blue-600" />
+              <span className="text-gray-800">Groups</span>
             </div>
             <FaChevronRight className="w-4 h-4 text-gray-400" />
           </Link>
-
-          <button 
+          <button
             onClick={handleLogout}
-            className="flex items-center justify-between w-full p-4 bg-gray-50 rounded-xl"
+            className="w-full flex items-center justify-between p-4 bg-gray-100 rounded-lg text-red-600"
           >
-            <div className="flex items-center gap-4">
-              <MdLogout className="w-6 h-6 text-red-500" />
-              <span className="text-red-500">Log Out</span>
+            <div className="flex items-center gap-3">
+              <MdLogout className="w-5 h-5" />
+              <span>Logout</span>
             </div>
-            <FaChevronRight className="w-4 h-4 text-gray-400" />
+            <FaChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
-
-      {/* Bottom Navigation */}
-      <BottomNav />
     </div>
   );
 } 

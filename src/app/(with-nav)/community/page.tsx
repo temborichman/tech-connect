@@ -4,7 +4,6 @@ import { useState } from "react";
 import { FaUserPlus, FaPlus, FaHome, FaEnvelope, FaUser, FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import BottomNav from "../components/BottomNav";
 import Image from "next/image";
 
 export default function CommunityPage() {
@@ -14,22 +13,22 @@ export default function CommunityPage() {
   const communityFeatures = [
     {
       title: 'Event Listing',
-      image: '/images/fr(2).png',
+      image: '/images/fr2.png',
       link: '/community/events'
     },
     {
       title: 'Mentorship',
-      image: '/images/fr(1).png',
+      image: '/images/fr1.png',
       link: '/mentorship/browse'
     },
     {
       title: 'Project Collaboration',
-      image: '/images/fr(3).png',
+      image: '/images/fr3.png',
       link: '/messages/tech-project-team'
     },
     {
       title: 'Job Board',
-      image: '/images/fr(4).png',
+      image: '/images/fr4.png',
       link: '/community/job-board'
     }
   ];
@@ -88,8 +87,6 @@ export default function CommunityPage() {
       >
         Back To Home Screen
       </Link>
-
-      <BottomNav />
     </div>
   );
-}
+} 

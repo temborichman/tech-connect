@@ -98,12 +98,14 @@ export default function InterestsScreen() {
       </div>
 
       {/* Get Started Button */}
-      <button
-        onClick={handleGetStarted}
-        className="px-33 py-3 mt-6 bg-[#0077B5] text-white rounded-lg font-semibold transition-all duration-500 transform hover:scale-105"
-      >
-        Get Started
-      </button>
+      <div className="mt-6 flex justify-center">
+        <button
+          onClick={handleGetStarted}
+          className="w-[280px] py-2.5 px-4 bg-[#1A73E8] text-white rounded-lg font-medium hover:bg-[#1557B0] transition-colors text-sm"
+        >
+          Get Started
+        </button>
+      </div>
     </div>
   );
 }

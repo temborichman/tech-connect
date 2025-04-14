@@ -129,7 +129,7 @@ export default function LoginPage() {
       )}
 
       {/* Form Inputs */}
-      <div className="w-full max-w-md space-y-4 px-6">
+      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl space-y-4 px-6">
         {/* Email Input */}
         <div className="flex items-center border-2 border-gray-300 dark:border-gray-600 rounded-lg p-2">
           <FaUser className="text-gray-500 dark:text-gray-400 mr-3" />
@@ -162,30 +162,34 @@ export default function LoginPage() {
       </div>
 
       {/* Login Button */}
-      <button
-        onClick={handleLogin}
-        className="px-37 py-3 mt-6 bg-[#0077B5] text-white rounded-lg font-semibold hover:bg-[#006394] transition-colors"
-      >
-        {loading ? (
-          <div className="flex items-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Signing in...
-          </div>
-        ) : (
-          "Login"
-        )}
-      </button>
+      <div className="mt-6 flex justify-center">
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-[280px] md:w-[320px] lg:w-[360px] py-2.5 px-4 rounded-lg font-medium transition-colors text-sm md:text-base ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#1A73E8] text-white hover:bg-[#1557B0]"
+          }`}
+          onClick={handleLogin}
+        >
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            "Login"
+          )}
+        </button>
+      </div>
 
       {/* OR Sign Up with */}
-      <div className="text-gray-600 dark:text-black mt-4 text-center">
+      <div className="text-gray-600 dark:text-black mt-3 text-center">
         <span>or sign up with</span>
       </div>
 
       {/* Social Sign-Up Buttons */}
-      <div className="flex space-x-4 mt-4">
+      <div className="flex space-x-3 mt-3">
         <button className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors">
           <FaFacebook />
         </button>
@@ -198,7 +202,7 @@ export default function LoginPage() {
       </div>
 
       {/* SignUp Link */}
-      <div className="mt-6 text-center text-gray-600 dark:text-black">
+      <div className="mt-4 text-center text-gray-600 dark:text-black">
         <span>
           Don't have an account?{" "}
           <button onClick={handleSignUp} className="text-[#006442] hover:underline">
@@ -208,7 +212,7 @@ export default function LoginPage() {
       </div>
 
       {/* Forgot Password Link */}
-      <div className="mt-4 text-center text-gray-600 dark:text-black">
+      <div className="mt-3 text-center text-gray-600 dark:text-black">
         <Link
           href="/forgot-password"
           className="text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"

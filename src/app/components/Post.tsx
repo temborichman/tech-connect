@@ -1,135 +1,96 @@
 import { useState } from 'react';
+import { FaHeart, FaComment, FaPaperPlane, FaEllipsisH } from 'react-icons/fa';
 import Image from 'next/image';
-import { FaHeart, FaComment, FaPaperPlane } from 'react-icons/fa';
 
 interface PostProps {
-  profileImage: string;
-  username: string;
-  role: string;
-  timeAgo: string;
+  id: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
   content: string;
-  postImage: string;
+  image?: string;
   likes: number;
   comments: number;
-  shares: number;
-  viewers: string[];
+  timestamp: string;
 }
 
 export default function Post({
-  profileImage,
-  username,
-  role,
-  timeAgo,
+  id,
+  author,
   content,
-  postImage,
+  image,
   likes,
   comments,
-  shares,
-  viewers
+  timestamp,
 }: PostProps) {
   const [isLiked, setIsLiked] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [likeCount, setLikeCount] = useState(likes);
 
-  const handleDoubleClick = () => {
-    if (!isLiked) {
-      setIsLiked(true);
-      setLikeCount(prev => prev + 1);
-    }
-  };
-
-  const handleLikeClick = () => {
+  const handleLike = () => {
     setIsLiked(!isLiked);
     setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
   };
 
   return (
-    <>
-      <div className="mt-6 text-black">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
+    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
+      {/* Post Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          <div className="relative w-10 h-10 rounded-full overflow-hidden">
             <Image
-              src={profileImage}
-              alt="Profile picture"
-              width={50}
-              height={50}
-              className="rounded-full"
+              src={author.avatar}
+              alt={author.name}
+              fill
+              className="object-cover"
             />
-            <div>
-              <p className="font-semibold text-lg">{username}</p>
-              <p className="text-sm text-gray-600">{role}</p>
-              <p className="text-sm text-gray-500">{timeAgo}</p>
-            </div>
           </div>
-          <button className="text-gray-600">
-            <span className="text-2xl">...</span>
-          </button>
-        </div>
-        
-        <p className="text-sm mb-4">{content}</p>
-        
-        <div 
-          className="rounded-lg overflow-hidden relative cursor-pointer"
-          onClick={() => setShowModal(true)}
-          onDoubleClick={handleDoubleClick}
-        >
-          <div className="absolute top-4 left-4 flex -space-x-3 z-10">
-            {viewers.map((viewer, index) => (
-              <Image
-                key={index}
-                src={viewer}
-                alt="Viewer"
-                width={28}
-                height={28}
-                className="rounded-full border-2 border-white"
-              />
-            ))}
-          </div>
-          <Image
-            src={postImage}
-            alt="Post content"
-            width={500}
-            height={300}
-            className="w-full object-cover"
-          />
-        </div>
-
-        <div className="flex items-center justify-between mt-4 text-gray-600">
-          <div className="flex items-center space-x-2">
-            <button onClick={handleLikeClick}>
-              <FaHeart className={`w-5 h-5 ${isLiked ? 'text-red-500' : ''}`} />
-            </button>
-            <span>{likeCount}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <FaComment className="w-5 h-5" />
-            <span>{comments}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <FaPaperPlane className="w-5 h-5" />
-            <span>{shares}</span>
+          <div>
+            <h3 className="font-semibold text-black">{author.name}</h3>
+            <p className="text-sm text-black">{timestamp}</p>
           </div>
         </div>
+        <button className="text-black hover:text-gray-700">
+          <FaEllipsisH />
+        </button>
       </div>
 
-      {/* Image Modal */}
-      {showModal && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-          onClick={() => setShowModal(false)}
-        >
-          <div className="max-w-4xl w-full p-4">
-            <Image
-              src={postImage}
-              alt="Post content"
-              width={1200}
-              height={800}
-              className="w-full h-auto"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
+      {/* Post Content */}
+      <p className="text-black mb-4">{content}</p>
+
+      {/* Post Image */}
+      {image && (
+        <div className="relative w-full h-64 mb-4 rounded-lg overflow-hidden">
+          <Image
+            src={image}
+            alt="Post image"
+            fill
+            className="object-cover"
+          />
         </div>
       )}
-    </>
+
+      {/* Post Actions */}
+      <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={handleLike}
+            className={`flex items-center space-x-1 ${
+              isLiked ? 'text-red-500' : 'text-black'
+            }`}
+          >
+            <FaHeart className={isLiked ? 'fill-current' : ''} />
+            <span>{likeCount}</span>
+          </button>
+          <button className="flex items-center space-x-1 text-black">
+            <FaComment />
+            <span>{comments}</span>
+          </button>
+        </div>
+        <button className="text-black">
+          <FaPaperPlane />
+        </button>
+      </div>
+    </div>
   );
 } 
