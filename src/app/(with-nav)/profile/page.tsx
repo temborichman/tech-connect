@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { FaArrowLeft, FaBell, FaHome, FaUsers, FaPlus, FaComments, FaUser, FaChevronRight } from 'react-icons/fa';
+import { FaArrowLeft, FaBell, FaUser, FaChevronRight } from 'react-icons/fa';
 import { MdNotifications, MdAnalytics, MdGroup, MdLogout } from 'react-icons/md';
 import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';

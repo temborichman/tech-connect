@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { FaMapMarkerAlt, FaClock, FaBell, FaArrowLeft, FaSearch, FaHome, FaUserPlus, FaPlus, FaEnvelope, FaUser } from "react-icons/fa";
+import { FaMapMarkerAlt, FaClock, FaArrowLeft, FaSearch, FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from 'next/image';
 import BottomNav from '../../components/BottomNav';
 
 export default function EventsPage() {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState("upcoming");
   const [activeCategory, setActiveCategory] = useState('All');
   
   const categories = [

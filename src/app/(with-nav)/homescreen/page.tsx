@@ -4,17 +4,9 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaBell, FaHeart, FaComment, FaPaperPlane, FaHome, FaUserPlus, FaEnvelope, FaUser, FaChevronRight, FaTimes } from 'react-icons/fa';
+import { FaBell, FaTimes } from 'react-icons/fa';
 import Post from '@/app/components/Post';
 import BottomNav from '@/app/components/BottomNav';
-
-const navItems = [
-  { icon: FaHome, label: 'Home', path: '/' },
-  { icon: FaUserPlus, label: 'Community', path: '/community' },
-  { icon: () => <Image src="/images/create.png" alt="Create" width={24} height={24} />, label: 'Create', path: '/create' },
-  { icon: FaEnvelope, label: 'Messages', path: '/messages' },
-  { icon: FaUser, label: 'Profile', path: '/profile' },
-];
 
 // Sample post data
 const generatePosts = (start: number, end: number) => {
