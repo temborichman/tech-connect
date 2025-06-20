@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaBell, FaTimes } from 'react-icons/fa';
+import { FaBell, FaTimes, FaChevronRight } from 'react-icons/fa';
 import Post from '@/app/components/Post';
 import BottomNav from '@/app/components/BottomNav';
 
