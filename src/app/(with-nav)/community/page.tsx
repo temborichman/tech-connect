@@ -1,15 +1,11 @@
-g"use client";
+"use client";
 
 import { useState } from "react";
 import { FaUserPlus, FaPlus, FaHome, FaEnvelope, FaUser, FaBell } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function CommunityPage() {
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState("all");
-
   const communityFeatures = [
     {
       title: 'Event Listing',
