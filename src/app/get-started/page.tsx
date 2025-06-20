@@ -22,10 +22,6 @@ export default function GetStartedScreen() {
   const [isAnimating, setIsAnimating] = useState(false); // Animation state
   const router = useRouter();
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
   const handleGetStarted = () => {
     setIsAnimating(true); // Start animation
     setTimeout(() => {

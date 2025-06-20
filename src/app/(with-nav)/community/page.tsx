@@ -1,4 +1,4 @@
-"use client";
+g"use client";
 
 import { useState } from "react";
 import { FaUserPlus, FaPlus, FaHome, FaEnvelope, FaUser, FaBell } from "react-icons/fa";

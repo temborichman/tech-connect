@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaFacebook, FaGoogle, FaApple, FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import { HiLightBulb, HiOutlineLightBulb } from "react-icons/hi";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 import { app } from "../lib/firebase";
 import Link from "next/link";
 
